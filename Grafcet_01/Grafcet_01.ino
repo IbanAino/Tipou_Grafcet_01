@@ -80,6 +80,13 @@ void setup() {
     state[i] = false;
   }
   state[sleep] = true;
+  
+  // Setup the LCD screen
+  InitializeDisplay();
+  clearDisplay();
+  //drawBitmap(0, 0, eyes, 128, 46);
+  //screenDisplay();
+  
 }
 
 //********************************* MAIN LOOP ************************
@@ -122,5 +129,5 @@ void loop() {
   }
 
   Serial.println("---------------------");
-  delay(1000);
+  delay(100);
 }
