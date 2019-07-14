@@ -2,11 +2,10 @@
 #include <arduino.h>
 #include "StatesFunctions.h"
 
-
 enum {sleep, awaike, drink};
 
 void PerformState(bool state[3],bool *flagInitState){
-  
+   
   if(state[sleep]){
     Serial.println("-> Sleep");
 

@@ -1,23 +1,25 @@
 #include "StatesFunctions.h"
 
-bool state[3];
-enum {sleep, awaike, drink};
-
-bool transition[4];
-
-// inputs from sensors for transitions formulas 
-bool shake = false;
-bool water = false;
-bool noWater = true;
-bool lightOff = false;
-
 // Hardware input pins
 const byte button1 = 8;
 const byte button2 = 9;
 const byte button3 = 10;
 
-bool flagInitState = true;
+// States of the grafcet, indended with its enum to be easy to understand inside the source code
+bool state[3];
+enum {sleep, awaike, drink};
 
+// Grafcet transitions table
+bool transition[4];
+
+// Inputs from sensors for transitions formulas
+bool shake = false;
+bool water = false;
+bool noWater = true;
+bool lightOff = false;
+
+// Flag to perform a loop only once at the launch of each state
+bool flagInitState = true;
 
 //************************* FUNCTIONS ****************************
 
@@ -64,12 +66,12 @@ void ActivateStates(){
 //**************************** SETUP *****************************
 
 void setup() {
-  // Init Input and Outputs
+  // Init hardware Input and Outputs
   pinMode(button1, INPUT_PULLUP);
   pinMode(button2, INPUT_PULLUP);
   pinMode(button3, INPUT_PULLUP);
 
-  // Communication with the PC
+  // Setup communication with the PC
   Serial.begin(9600);
   Serial.println("Program initialisation");
 
@@ -90,6 +92,7 @@ void loop() {
   ActivateStates();
   PerformState(state, &flagInitState);
 
+  // Debug messages to monitor the grafcet avancment
   Serial.println("Input states :");
   Serial.print("   shake    => ");
   Serial.println(shake);
