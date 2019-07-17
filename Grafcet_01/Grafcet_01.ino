@@ -18,12 +18,14 @@ bool water = false;
 bool noWater = true;
 bool lightOff = false;
 
-// Flag to perform a loop only once at the launch of each state
-bool flagInitState = true;
+// Flag to perform a loop only once for each state execution
+bool flagStateOnInit = true;
+bool flagStateOnExit = false;
 
 //************************* FUNCTIONS ****************************
 
 void ReadInputs(){
+  Serial.println("            ReadInputs()");
   shake = digitalRead(button1) == LOW ? true : false;
   water = digitalRead(button2 )== LOW ? true : false;
   noWater  = digitalRead(button2) == LOW ? false : true;
@@ -31,13 +33,22 @@ void ReadInputs(){
 }
 
 void ComputeTransitions(){
+  Serial.println("            ComputeTransitions()");
   transition[0] = state[sleep] && shake;
   transition[1] = state[awaike] && water;
   transition[2] = state[awaike] && lightOff;
   transition[3] = state[drink] && noWater;
 }
 
+void CloseStates(){
+  if(transition[0]) flagStateOnExit = true;
+  if(transition[1]) flagStateOnExit = true;
+  if(transition[2]) flagStateOnExit = true;
+  if(transition[3]) flagStateOnExit = true;
+}
+
 void DesactivateStates(){
+  Serial.println("            DesactivateStates()");
   if(transition[0]) state[sleep] = false;
   if(transition[1]) state[awaike] = false;
   if(transition[2]) state[awaike] = false;
@@ -45,21 +56,22 @@ void DesactivateStates(){
 }
 
 void ActivateStates(){
+  Serial.println("            ActivateStates()");
   if(transition[0]){
     state[awaike] = true;
-    flagInitState = true;
+    flagStateOnInit = true;
   }
   if(transition[1]){
     state[drink] = true;
-    flagInitState = true;
+    flagStateOnInit = true;
   }
   if(transition[2]){
     state[sleep] = true;
-    flagInitState = true;
+    flagStateOnInit = true;
   }
   if(transition[3]){
     state[awaike] = true;
-    flagInitState = true;
+    flagStateOnInit = true;
   }
 }
 
@@ -83,21 +95,20 @@ void setup() {
   
   // Setup the LCD screen
   InitializeDisplay();
-  clearDisplay();
-  //drawBitmap(0, 0, eyes, 128, 46);
-  //screenDisplay();
-  
+  clearDisplay(); 
 }
 
 //********************************* MAIN LOOP ************************
 
 void loop() {
-
+  
   ReadInputs();
   ComputeTransitions();
+  CloseStates();
+  PerformState(state, &flagStateOnInit, &flagStateOnExit);
   DesactivateStates();
   ActivateStates();
-  PerformState(state, &flagInitState);
+  
 
   // Debug messages to monitor the grafcet avancment
   Serial.println("Input states :");
@@ -129,5 +140,5 @@ void loop() {
   }
 
   Serial.println("---------------------");
-  delay(100);
+  delay(1000);
 }
