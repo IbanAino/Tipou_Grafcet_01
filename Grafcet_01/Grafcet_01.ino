@@ -1,3 +1,4 @@
+
 #include "StatesFunctions.h"
 
 // Hardware input pins
@@ -136,5 +137,5 @@ void loop() {
   }
 
   Serial.println("---------------------");
-  delay(1000);
+  //delay(1000);
 }

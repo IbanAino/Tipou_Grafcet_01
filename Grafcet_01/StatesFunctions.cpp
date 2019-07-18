@@ -1,4 +1,5 @@
 
+
 #include <arduino.h>
 #include "StatesFunctions.h"
 
@@ -35,7 +36,7 @@ void PerformState(bool state[3],bool *flagStateOnInit, bool *flagStateOnExit){
       Serial.println("********* DO ONCE init");
       
       clearDisplay();
-      drawBitmap(0, 0, eyesAwaike, 64, 48);
+      drawBitmap(0, 0, eyesAwaike, 128, 50);
       screenDisplay();   
     }else if(*flagStateOnExit == true){
       *flagStateOnExit = false;
@@ -51,11 +52,17 @@ void PerformState(bool state[3],bool *flagStateOnInit, bool *flagStateOnExit){
       Serial.println("******** DO ONCE init");
       
       clearDisplay();
-      drawBitmap(0, 0, eyesTears, 128, 64);
+      drawBitmap(25, 0, eyesDrink, 80, 64);
       screenDisplay();    
-    }else if(*flagStateOnExit == true){
+    }
+    else if(*flagStateOnExit == true){
       *flagStateOnExit = false;
       Serial.println("######### DO ONCE exit");
+      
+      clearDisplay();
+      drawBitmap(35, 0, eyesHappy, 62, 60);
+      screenDisplay();
+      delay(500);
     }
   }
 
