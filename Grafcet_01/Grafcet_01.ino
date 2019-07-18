@@ -40,7 +40,7 @@ void ComputeTransitions(){
   transition[3] = state[drink] && noWater;
 }
 
-void CloseStates(){
+void ExitStates(){
   if(transition[0]) flagStateOnExit = true;
   if(transition[1]) flagStateOnExit = true;
   if(transition[2]) flagStateOnExit = true;
@@ -55,24 +55,19 @@ void DesactivateStates(){
   if(transition[3]) state[drink] = false;
 }
 
+void InitStates(){
+  if(transition[0])flagStateOnInit = true;
+  if(transition[1])flagStateOnInit = true;
+  if(transition[2])flagStateOnInit = true;
+  if(transition[3])flagStateOnInit = true;
+}
+
 void ActivateStates(){
   Serial.println("            ActivateStates()");
-  if(transition[0]){
-    state[awaike] = true;
-    flagStateOnInit = true;
-  }
-  if(transition[1]){
-    state[drink] = true;
-    flagStateOnInit = true;
-  }
-  if(transition[2]){
-    state[sleep] = true;
-    flagStateOnInit = true;
-  }
-  if(transition[3]){
-    state[awaike] = true;
-    flagStateOnInit = true;
-  }
+  if(transition[0]) state[awaike] = true;
+  if(transition[1]) state[drink] = true;
+  if(transition[2]) state[sleep] = true;
+  if(transition[3]) state[awaike] = true;
 }
 
 //**************************** SETUP *****************************
@@ -104,9 +99,10 @@ void loop() {
   
   ReadInputs();
   ComputeTransitions();
-  CloseStates();
+  ExitStates();
   PerformState(state, &flagStateOnInit, &flagStateOnExit);
   DesactivateStates();
+  InitStates();
   ActivateStates();
   
 
