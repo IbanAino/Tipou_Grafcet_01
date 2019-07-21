@@ -23,10 +23,17 @@ bool lightOff = false;
 bool flagStateOnInit = true;
 bool flagStateOnExit = false;
 
+// Temporisation variables
+//unsigned long tempoDuration = 0;
+unsigned long tempoEndTime = 0;
+bool tempoOver = false;
+bool freezeComputeTransitions = false;
+bool launchTempo = false;
+bool setTempoDuration = false;
+
 //************************* FUNCTIONS ****************************
 
 void ReadInputs(){
-  Serial.println("            ReadInputs()");
   shake = digitalRead(button1) == LOW ? true : false;
   water = digitalRead(button2 )== LOW ? true : false;
   noWater  = digitalRead(button2) == LOW ? false : true;
@@ -34,10 +41,9 @@ void ReadInputs(){
 }
 
 void ComputeTransitions(){
-  Serial.println("            ComputeTransitions()");
   transition[0] = state[sleep] && shake;
   transition[1] = state[awaike] && water;
-  transition[2] = state[awaike] && lightOff;
+  transition[2] = (state[awaike] && lightOff) || (state[awaike] && tempoOver);
   transition[3] = state[drink] && noWater;
 }
 
@@ -49,7 +55,6 @@ void ExitStates(){
 }
 
 void DesactivateStates(){
-  Serial.println("            DesactivateStates()");
   if(transition[0]) state[sleep] = false;
   if(transition[1]) state[awaike] = false;
   if(transition[2]) state[awaike] = false;
@@ -64,11 +69,24 @@ void InitStates(){
 }
 
 void ActivateStates(){
-  Serial.println("            ActivateStates()");
   if(transition[0]) state[awaike] = true;
   if(transition[1]) state[drink] = true;
   if(transition[2]) state[sleep] = true;
   if(transition[3]) state[awaike] = true;
+}
+
+void ManageTempo(){
+  if(launchTempo){
+    if(setTempoDuration){
+      setTempoDuration = false;
+      tempoEndTime = 5000 + millis();
+      tempoOver = false;
+    }
+    if(tempoEndTime < millis()){
+      tempoOver = true;
+      launchTempo = false;
+    }
+  } 
 }
 
 //**************************** SETUP *****************************
@@ -99,43 +117,72 @@ void setup() {
 void loop() {
   
   ReadInputs();
-  ComputeTransitions();
-  ExitStates();
-  PerformState(state, &flagStateOnInit, &flagStateOnExit);
-  DesactivateStates();
-  InitStates();
-  ActivateStates();
-  
-
-  // Debug messages to monitor the grafcet avancment
-  Serial.println("Input states :");
+  Serial.println("Read inputs");
   Serial.print("   shake    => ");
   Serial.println(shake);
-    //Serial.println(digitalRead(button1));
   Serial.print("   water    => ");
   Serial.println(water);
-    //Serial.println(digitalRead(button2));
   Serial.print("   noWater  => ");
   Serial.println(noWater);
-    //Serial.println(!digitalRead(button2));
   Serial.print("   lightOff => ");
   Serial.println(lightOff);
-    //Serial.println(digitalRead(button3));
 
+  ManageTempo();
+  Serial.println("Manage tempo");
+  Serial.print("   launchTempo : ");
+  Serial.println(launchTempo);
+  Serial.print("   tempoOver : ");
+  Serial.println(tempoOver);
+  
+  ComputeTransitions();
+  Serial.println("Compute transitions");
   for(int i = 0; i < 4; i++){
-    Serial.print("Transition ");
+    Serial.print("   Transition ");
     Serial.print(i);
     Serial.print(" : ");
     Serial.println(transition[i]);
   }
+  
+  ExitStates();
+  Serial.println("Exit states");
 
+  if(flagStateOnExit){
+    Serial.println("Perform states");
+    PerformState(state, &flagStateOnInit, &flagStateOnExit, &launchTempo, &setTempoDuration);
+  }
+ 
+  DesactivateStates();
+  Serial.println("Desactivate States");
+  
+  InitStates();
+  Serial.println("Init states");
+  
+  ActivateStates();
+  Serial.println("Activate states");
   for(int i = 0; i < 3; i++){
-    Serial.print("State ");
+    Serial.print("   State ");
     Serial.print(i);
     Serial.print(" : ");
     Serial.println(state[i]);
   }
+  
+  if(flagStateOnInit){
+    Serial.println("Perform states");
+    PerformState(state, &flagStateOnInit, &flagStateOnExit, &launchTempo, &setTempoDuration);
+  }
 
+  Serial.println("Perform states");
+  PerformState(state, &flagStateOnInit, &flagStateOnExit, &launchTempo, &setTempoDuration);
+/*
+  Serial.println("millis() and tempoEndTime :");
+  Serial.println(millis());
+  Serial.println(tempoEndTime);
+
+  Serial.println("freezeComputeTransitions :");
+  Serial.println(freezeComputeTransitions);
+*/
   Serial.println("---------------------");
+
+  
   //delay(1000);
 }

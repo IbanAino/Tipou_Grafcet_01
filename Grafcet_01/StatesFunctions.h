@@ -6,6 +6,6 @@
 
 //************* Funtions ************
 
-void PerformState(bool state[3],bool *flagStateOnInit, bool *flagStateOnExit);
+void PerformState(bool state[3],bool *flagStateOnInit, bool *flagStateOnExit, bool *launchTempo, bool *setTempoDuration);
 
 #endif
