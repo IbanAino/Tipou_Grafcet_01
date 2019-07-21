@@ -27,9 +27,12 @@ bool flagStateOnExit = false;
 //unsigned long tempoDuration = 0;
 unsigned long tempoEndTime = 0;
 bool tempoOver = false;
-bool freezeComputeTransitions = false;
 bool launchTempo = false;
 bool setTempoDuration = false;
+
+// Light sensor variables
+bool lightTempoLaunched = false;
+unsigned long lightTempoDuration = 0;
 
 //************************* FUNCTIONS ****************************
 
@@ -37,7 +40,7 @@ void ReadInputs(){
   shake = digitalRead(button1) == LOW ? true : false;
   water = digitalRead(button2 )== LOW ? true : false;
   noWater  = digitalRead(button2) == LOW ? false : true;
-  lightOff = digitalRead(button3) == LOW ? true : false;
+  //lightOff = digitalRead(button3) == LOW ? true : false;
 }
 
 void ComputeTransitions(){
@@ -79,12 +82,35 @@ void ManageTempo(){
   if(launchTempo){
     if(setTempoDuration){
       setTempoDuration = false;
-      tempoEndTime = 5000 + millis();
+      tempoEndTime = 10000 + millis();
       tempoOver = false;
     }
     if(tempoEndTime < millis()){
       tempoOver = true;
       launchTempo = false;
+    }
+  } 
+}
+
+void ManageLightSensor(){
+  // read the light sensot value
+  bool lightSensor = digitalRead(button3) == LOW ? false : true;
+
+  if(lightSensor){ // light ON
+  lightOff = false;
+    // Set the tempo duration
+    if(lightTempoLaunched){
+      lightTempoLaunched = false;
+      lightTempoDuration = millis() + 1000;      
+    }
+  }else{ // light OFF
+    if(lightTempoLaunched){
+      if(lightTempoDuration < millis()){
+        lightOff = true;
+      }
+    }else{
+      lightTempoLaunched = true;
+      lightTempoDuration = millis() + 1000;
     }
   } 
 }
@@ -133,6 +159,11 @@ void loop() {
   Serial.println(launchTempo);
   Serial.print("   tempoOver : ");
   Serial.println(tempoOver);
+
+  ManageLightSensor();
+  Serial.println("ManageLightSensor");
+  Serial.print("   lightOff");
+  Serial.println(lightOff);
   
   ComputeTransitions();
   Serial.println("Compute transitions");

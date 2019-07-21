@@ -10,7 +10,8 @@
 enum {sleep, awaike, drink};
 
 void PerformState(bool state[3],bool *flagStateOnInit, bool *flagStateOnExit, bool *launchTempo, bool *setTempoDuration){
-   
+
+//------------------------------------------------------------  
   if(state[sleep]){
     Serial.println("   -> Sleep");
     // ON INIT
@@ -28,7 +29,8 @@ void PerformState(bool state[3],bool *flagStateOnInit, bool *flagStateOnExit, bo
       Serial.println("   ## DO ONCE exit");
     }
   }
-  
+
+//------------------------------------------------------------
   if(state[awaike]){
     Serial.println("   -> Awaike");
     // ON INIT
@@ -52,6 +54,7 @@ void PerformState(bool state[3],bool *flagStateOnInit, bool *flagStateOnExit, bo
     }
   }
   
+//------------------------------------------------------------
   if(state[drink]){
     Serial.println("   -> Drink");
     // ON INIT
