@@ -1,3 +1,4 @@
+#define DEBUG(false)
 
 #include "StatesFunctions.h"
 
@@ -124,9 +125,11 @@ void setup() {
   pinMode(button2, INPUT_PULLUP);
   pinMode(button3, INPUT_PULLUP);
 
+#if DEBUG
   // Setup communication with the PC
   Serial.begin(9600);
   Serial.println("Program initialisation");
+#endif
 
   // Set setps to 0, exept the forst step that is set to 1.
   for(int i = 0; i < 2; i++){
@@ -144,6 +147,7 @@ void setup() {
 void loop() {
   
   ReadInputs();
+#if DEBUG
   Serial.println("Read inputs");
   Serial.print("   shake    => ");
   Serial.println(shake);
@@ -153,20 +157,26 @@ void loop() {
   Serial.println(noWater);
   Serial.print("   lightOff => ");
   Serial.println(lightOff);
+#endif
 
   ManageTempo();
+#if DEBUG
   Serial.println("Manage tempo");
   Serial.print("   launchTempo : ");
   Serial.println(launchTempo);
   Serial.print("   tempoOver : ");
   Serial.println(tempoOver);
+#endif
 
   ManageLightSensor();
+#if DEBUG
   Serial.println("ManageLightSensor");
   Serial.print("   lightOff");
   Serial.println(lightOff);
-  
+#endif
+ 
   ComputeTransitions();
+#if DEBUG
   Serial.println("Compute transitions");
   for(int i = 0; i < 4; i++){
     Serial.print("   Transition ");
@@ -174,22 +184,30 @@ void loop() {
     Serial.print(" : ");
     Serial.println(transition[i]);
   }
-  
+#endif
+ 
   ExitStates();
+#if DEBUG
   Serial.println("Exit states");
-
+#endif
   if(flagStateOnExit){
+#if DEBUG
     Serial.println("Perform states");
+#endif
     PerformState(state, &flagStateOnInit, &flagStateOnExit, &launchTempo, &setTempoDuration);
   }
- 
+
   DesactivateStates();
+#if DEBUG
   Serial.println("Desactivate States");
-  
+#endif
+
   InitStates();
+#if DEBUG
   Serial.println("Init states");
-  
+#endif
   ActivateStates();
+#if DEBUG
   Serial.println("Activate states");
   for(int i = 0; i < 3; i++){
     Serial.print("   State ");
@@ -197,13 +215,18 @@ void loop() {
     Serial.print(" : ");
     Serial.println(state[i]);
   }
-  
+#endif
+
   if(flagStateOnInit){
+#if DEBUG
     Serial.println("Perform states");
+#endif
     PerformState(state, &flagStateOnInit, &flagStateOnExit, &launchTempo, &setTempoDuration);
   }
 
+#if DEBUG
   Serial.println("Perform states");
+#endif
   PerformState(state, &flagStateOnInit, &flagStateOnExit, &launchTempo, &setTempoDuration);
 /*
   Serial.println("millis() and tempoEndTime :");
@@ -213,8 +236,9 @@ void loop() {
   Serial.println("freezeComputeTransitions :");
   Serial.println(freezeComputeTransitions);
 */
+#if DEBUG
   Serial.println("---------------------");
-
+#endif
   
   //delay(1000);
 }

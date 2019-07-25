@@ -65,11 +65,9 @@ void PerformState(bool state[3],bool *flagStateOnInit, bool *flagStateOnExit, bo
 
 //------------------------------------------------------------  
   if(state[sleep]){
-    Serial.println("   -> Sleep");
     // ON INIT
     if(*flagStateOnInit == true){
       *flagStateOnInit = false;
-      Serial.println("   ** DO ONCE init");
 
       // Screen
       clearDisplay();
@@ -79,17 +77,14 @@ void PerformState(bool state[3],bool *flagStateOnInit, bool *flagStateOnExit, bo
     // ON EXIT
     else if(*flagStateOnExit == true){
       *flagStateOnExit = false;
-      Serial.println("   ## DO ONCE exit");
     }
   }
 
 //------------------------------------------------------------
   if(state[awaike]){
-    Serial.println("   -> Awaike");
     // ON INIT
     if(*flagStateOnInit == true){
       *flagStateOnInit = false;
-      Serial.println("   ** DO ONCE init");
 
        // Screen
       clearDisplay();
@@ -106,19 +101,15 @@ void PerformState(bool state[3],bool *flagStateOnInit, bool *flagStateOnExit, bo
     // ON EXIT
     else if(*flagStateOnExit == true){
       *flagStateOnExit = false;
-      Serial.println("   ## DO ONCE exit");
-
     }
   }
   
 //------------------------------------------------------------
   if(state[drink]){
-    Serial.println("   -> Drink");
     // ON INIT
     if(*flagStateOnInit == true){
       *flagStateOnInit = false;
-      Serial.println("   ** DO ONCE init");
-
+      
       // Screen
       clearDisplay();
       drawBitmap(25, 0, eyesDrink, 80, 64);
@@ -127,7 +118,6 @@ void PerformState(bool state[3],bool *flagStateOnInit, bool *flagStateOnExit, bo
     // ON EXIT
     else if(*flagStateOnExit == true){
       *flagStateOnExit = false;
-      Serial.println("   ## DO ONCE exit");
 
       // Screen
       clearDisplay();
