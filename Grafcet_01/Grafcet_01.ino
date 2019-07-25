@@ -3,9 +3,9 @@
 #include "StatesFunctions.h"
 
 // Hardware input pins
-const byte button1 = 8;
-const byte button2 = 7;
-const byte button3 = 10;
+const byte button1 = 5; // shake sensor
+const byte button2 = 2; // water sensor
+const byte button3 = 3; // light sensor
 
 
 // States of the grafcet, indended with its enum to be easy to understand inside the source code
@@ -46,7 +46,7 @@ void ReadInputs(){
 }
 
 void ComputeTransitions(){
-  transition[0] = state[sleep] && shake;
+  transition[0] = state[sleep] && shake && !lightOff;
   transition[1] = state[awaike] && water;
   transition[2] = (state[awaike] && lightOff) || (state[awaike] && tempoOver);
   transition[3] = state[drink] && noWater;

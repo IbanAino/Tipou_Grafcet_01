@@ -36,8 +36,8 @@ unsigned int soundAwaike [4][2] = {
 
 unsigned int soundDrink [3][2] = {
   {3, 0}, // the first row contains the array size
-  {NOTE_D5, 10},
-  {0, 10}
+  {NOTE_D5, 12},
+  {0, 12}
 };
 
 //----------------------------------------
