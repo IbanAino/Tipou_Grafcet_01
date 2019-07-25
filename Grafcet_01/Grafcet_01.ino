@@ -3,8 +3,9 @@
 
 // Hardware input pins
 const byte button1 = 8;
-const byte button2 = 9;
+const byte button2 = 7;
 const byte button3 = 10;
+
 
 // States of the grafcet, indended with its enum to be easy to understand inside the source code
 bool state[3];
