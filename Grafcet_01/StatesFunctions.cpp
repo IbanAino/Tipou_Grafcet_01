@@ -40,6 +40,12 @@ unsigned int soundDrink [3][2] = {
   {0, 12}
 };
 
+unsigned int soundEndDrink [3][2] = {
+  {3, 0}, // the first row contains the array size
+  {NOTE_B5, 12},
+  {0, 12}
+};
+
 //----------------------------------------
 //------------ Local functions -----------
 //----------------------------------------
@@ -125,7 +131,7 @@ void PerformState(bool state[3],bool *flagStateOnInit, bool *flagStateOnExit, bo
       screenDisplay();
 
       // Sound
-      PlaySound(soundSetup);
+      PlaySound(soundEndDrink);
       delay(500);
     }
     // MAIN ACTIONS

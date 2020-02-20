@@ -96,7 +96,7 @@ void ManageTempo(){
 
 void ManageLightSensor(){
   // read the light sensot value
-  bool lightSensor = digitalRead(button3) == LOW ? false : true;
+  bool lightSensor = digitalRead(button3) == LOW ? true : false;
 
   if(lightSensor){ // light ON
   lightOff = false;
